@@ -75,7 +75,7 @@ namespace LogPon
         public static bool AddLogCallback (Application.LogCallback logCallback)
         {
             var isValid = IsValidLogCallback (logCallback);
-            if (IsValidLogCallback (logCallback)) {
+            if (IsValidLogCallback (logCallback) && (logCallbackList.Contains (logCallback) == false)) {
                 logCallbackList.Add (logCallback);
             }
             return isValid;
@@ -88,7 +88,7 @@ namespace LogPon
         public static bool AddLogCallback (System.Action<LogEntry> logCallback)
         {
             var isValid = IsValidLogCallback (logCallback);
-            if (IsValidLogCallback (logCallback)) {
+            if (IsValidLogCallback (logCallback) && (logActionList.Contains (logCallback) == false)) {
                 logActionList.Add (logCallback);
             }
             return isValid;
@@ -102,7 +102,7 @@ namespace LogPon
         public static bool InsertLogCallback (int index, Application.LogCallback logCallback)
         {
             var isValid = IsValidLogCallback (logCallback);
-            if (IsValidLogCallback (logCallback)) {
+            if (IsValidLogCallback (logCallback) && (logCallbackList.Contains (logCallback) == false)) {
                 logCallbackList.Insert (index, logCallback);
             }
             return isValid;
@@ -116,7 +116,7 @@ namespace LogPon
         public static bool InsertLogCallback (int index, System.Action<LogEntry> logCallback)
         {
             var isValid = IsValidLogCallback (logCallback);
-            if (IsValidLogCallback (logCallback)) {
+            if (IsValidLogCallback (logCallback) && (logActionList.Contains (logCallback) == false)) {
                 logActionList.Insert (index, logCallback);
             }
             return isValid;

@@ -24,16 +24,21 @@ namespace LogPon
         public string StackTrace { get { return stackTrace; } }
 
         [SerializeField]
-        private LogType
-            logType;
+        private string
+            tag;
 
-        public LogType LogType { get { return logType; } }
+        public string Tag { get { return tag; } }
 
         public LogEntry (string condition, string stackTrace, LogType logType)
+            : this (condition, stackTrace, logType.ToString ())
+        {
+        }
+
+        public LogEntry (string condition, string stackTrace, string tag)
         {
             this.condition = condition;
             this.stackTrace = stackTrace;
-            this.logType = logType;
+            this.tag = tag;
         }
     }
 
@@ -156,12 +161,8 @@ namespace LogPon
         /// </summary>
         public static void CleanNullObjects ()
         {
-            logCallbackList = (from callback in logCallbackList
-                                        where IsValidLogCallback (callback)
-                                        select callback).ToList ();
-            logActionList = (from callback in logActionList
-                                      where IsValidLogCallback (callback)
-                                      select callback).ToList ();
+            logCallbackList = logCallbackList.FindAll(IsValidLogCallback);
+            logActionList = logActionList.FindAll(IsValidLogCallback);
         }
 
         /// <summary>

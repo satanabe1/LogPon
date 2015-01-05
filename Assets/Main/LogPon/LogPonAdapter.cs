@@ -9,11 +9,11 @@ namespace LogPon
     /// ゲーム側とEditorScript側の中間
     /// LogPonWindowはこいつを見て表示を変える
     /// </summary>
-    [ExecuteInEditMode]
     public static class LogPonAdapter
     {
 
         #region selectedTag
+
         private static bool tagIsChanged = false;
         private static string selectedTag;
 
@@ -34,9 +34,11 @@ namespace LogPon
                 RequireRepaintView ();
             }
         }
+
         #endregion selectedTag
 
         #region logList
+
         private static List<LogEntry> logList;
 
         /// <summary>
@@ -61,9 +63,11 @@ namespace LogPon
                 return LogList.AsReadOnly ();
             }
         }
+
         #endregion logList
 
         #region selectedLogList
+
         private static List<LogEntry> selectedLogList;
 
         /// <summary>
@@ -96,8 +100,18 @@ namespace LogPon
                 return SelectedLogList.AsReadOnly ();
             }
         }
+
         #endregion selectedLogList
 
+        #region
+
+        /// <summary>
+        /// EditorScript側へログの変更を通知するAction
+        /// </summary>
+        /// <value>The require repaint action.</value>
+        public static System.Action OnRequireRepaint { get; set; }
+
+        #endregion
 
         /// <summary>
         /// ログを登録する LogEventDistributor#AddLogCallback に突っ込む事を想定？
@@ -126,14 +140,13 @@ namespace LogPon
         }
 
         /// <summary>
-        /// EditorWindowへログの変更を通知する
-        /// クラス名を知らなくても伝えられる方法を模索中
+        /// EditorScript側へログの変更を通知する
         /// </summary>
         private static void RequireRepaintView ()
         {
-#if UNITY_EDITOR
-            LogPonWindow.RequireRepaint ();
-#endif
+            if (OnRequireRepaint != null) {
+                OnRequireRepaint.Invoke ();
+            }
         }
     }
 }

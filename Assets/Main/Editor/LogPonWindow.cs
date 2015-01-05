@@ -29,7 +29,7 @@ namespace LogPon
             }
         }
 
-        private static LogPonWindow instance;
+        public static LogPonWindow instance;
         private Vector2 listScrollPosition;
 
         public static void RequireRepaint ()

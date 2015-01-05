@@ -15,19 +15,19 @@ namespace LogPon
         private string
             condition;
 
-        public string Condition { get { return condition; } }
+        public string Condition { get { return condition ?? string.Empty; } }
 
         [SerializeField]
         private string
             stackTrace;
 
-        public string StackTrace { get { return stackTrace; } }
+        public string StackTrace { get { return stackTrace ?? string.Empty; } }
 
         [SerializeField]
         private string
             tag;
 
-        public string Tag { get { return tag; } }
+        public string Tag { get { return tag ?? string.Empty; } }
 
         public LogEntry (string condition, string stackTrace, LogType logType)
             : this (condition, stackTrace, logType.ToString ())
@@ -39,6 +39,11 @@ namespace LogPon
             this.condition = condition;
             this.stackTrace = stackTrace;
             this.tag = tag;
+        }
+
+        public override string ToString ()
+        {
+            return string.Format ("[LogEntry: Condition={0}, StackTrace={1}, Tag={2}]", Condition, StackTrace, Tag);
         }
     }
 
@@ -65,22 +70,13 @@ namespace LogPon
         }
 
         /// <summary>
-        /// コールバック一覧の取得
-        /// </summary>
-        /// <returns>The log handler list.</returns>
-        public static System.Collections.ObjectModel.ReadOnlyCollection<Application.LogCallback> GetLogHandlerList ()
-        {
-            return logCallbackList.AsReadOnly ();
-        }
-
-        /// <summary>
         /// コールバックの追加
         /// </summary>
         /// <param name="logCallback">Log callback.</param>
         public static bool AddLogCallback (Application.LogCallback logCallback)
         {
             var isValid = IsValidLogCallback (logCallback);
-            if (IsValidLogCallback (logCallback) && (logCallbackList.Contains (logCallback) == false)) {
+            if (isValid && (logCallbackList.Contains (logCallback) == false)) {
                 logCallbackList.Add (logCallback);
             }
             return isValid;
@@ -93,7 +89,7 @@ namespace LogPon
         public static bool AddLogCallback (System.Action<LogEntry> logCallback)
         {
             var isValid = IsValidLogCallback (logCallback);
-            if (IsValidLogCallback (logCallback) && (logActionList.Contains (logCallback) == false)) {
+            if (isValid && (logActionList.Contains (logCallback) == false)) {
                 logActionList.Add (logCallback);
             }
             return isValid;
@@ -107,7 +103,7 @@ namespace LogPon
         public static bool InsertLogCallback (int index, Application.LogCallback logCallback)
         {
             var isValid = IsValidLogCallback (logCallback);
-            if (IsValidLogCallback (logCallback) && (logCallbackList.Contains (logCallback) == false)) {
+            if (isValid && (logCallbackList.Contains (logCallback) == false)) {
                 logCallbackList.Insert (index, logCallback);
             }
             return isValid;
@@ -161,8 +157,8 @@ namespace LogPon
         /// </summary>
         public static void CleanNullObjects ()
         {
-            logCallbackList = logCallbackList.FindAll(IsValidLogCallback);
-            logActionList = logActionList.FindAll(IsValidLogCallback);
+            logCallbackList = logCallbackList.FindAll (IsValidLogCallback);
+            logActionList = logActionList.FindAll (IsValidLogCallback);
         }
 
         /// <summary>
@@ -249,14 +245,4 @@ namespace LogPon
             return new LogEntry (condition, stackTrace, logType);
         }
     }
-    //  public static void Dump ()
-    //  {
-    //    logCallbackList.ForEach ((callback) => {
-    //      System.Text.StringBuilder sb = new System.Text.StringBuilder ();
-    //      sb.Append (callback).AppendLine ();
-    //      sb.Append ("Method:").Append (callback.Method).AppendLine ();
-    //      sb.Append ("Target:").Append (callback.Target).AppendLine ();
-    //      Debug.Log (sb);
-    //    });
-    //  }
 }
